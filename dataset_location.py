@@ -1,5 +1,5 @@
 # specify the root location where u downloaded the dataset
-root_location = "C:\\Users\\eptge\\Documents\\School\\2023-2024\\Classes\\16825\\r2n2_shapenet_dataset 2"
+root_location = ".."
 use_full_dataset = False
 dataset_name = (
     "r2n2_shapenet_dataset_full" if use_full_dataset else "r2n2_shapenet_dataset"
