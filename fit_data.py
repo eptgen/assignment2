@@ -129,7 +129,7 @@ def train_model(args):
         # fitting
         fit_voxel(voxels_src, voxels_tgt, args)
         
-        color = [0.7, 0.7, 1]
+        color = torch.tensor([0.7, 0.7, 1])
         
         renderer = get_mesh_renderer(image_size=256)
         mesh1 = cubify(voxels_src, 0.5)
