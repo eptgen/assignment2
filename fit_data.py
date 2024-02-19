@@ -7,7 +7,7 @@ import imageio
 import losses
 import numpy as np
 from pytorch3d.ops import cubify, sample_points_from_meshes
-from pytorch3d.renderer import FoVPerspectiveCameras, PointLights
+from pytorch3d.renderer import FoVPerspectiveCameras, PointLights, TexturesVertex
 from pytorch3d.renderer.cameras import look_at_view_transform
 from pytorch3d.structures import Meshes
 from pytorch3d.utils import ico_sphere
@@ -136,12 +136,12 @@ def train_model(args):
         mesh1 = mesh1.to(args.device)
         mesh1_textures = torch.ones_like(mesh1.verts_packed(), device = args.device)
         mesh1_textures = mesh1_textures * color
-        mesh1.textures = mesh1_textures
+        mesh1.textures = TexturesVertex(mesh1_textures)
         mesh2 = cubify(voxels_tgt, 0.5)
         mesh2 = mesh2.to(args.device)
         mesh2_textures = torch.ones_like(mesh2.verts_packed(), device = args.device)
         mesh2_textures = mesh2_textures * color
-        mesh2.textures = mesh2_textures
+        mesh2.textures = TexturesVertex(mesh2_textures)
         lights = PointLights(location=[[0, 0, -3]], device=args.device)
         
         num_povs = 15
