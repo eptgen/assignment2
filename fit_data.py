@@ -145,7 +145,8 @@ def train_model(args):
         lights = PointLights(location=[[0, 0, -3]], device=args.device)
         
         num_povs = 15
-        rends = []
+        rends1 = []
+        rends2 = []
         for i in range(num_povs):
             theta = 360 * (i / num_povs)
             R, T = look_at_view_transform(dist = 3., azim = theta)
