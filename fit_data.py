@@ -2,18 +2,18 @@ import argparse
 import os
 import time
 
+import dataset_location
+import imageio
 import losses
+import numpy as np
+from pytorch3d.ops import cubify, sample_points_from_meshes
+from pytorch3d.renderer import FoVPerspectiveCameras, PointLights
+from pytorch3d.renderer.cameras import look_at_view_transform
+from pytorch3d.structures import Meshes
 from pytorch3d.utils import ico_sphere
 from r2n2_custom import R2N2
-from pytorch3d.ops import sample_points_from_meshes
-from pytorch3d.structures import Meshes
-import dataset_location
 import torch
-
-
-
-
-
+from utils import get_device, get_mesh_renderer, load_cow_mesh
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Model Fit', add_help=False)
@@ -114,7 +114,6 @@ def train_model(args):
     
     feed = r2n2_dataset[0]
 
-
     feed_cuda = {}
     for k in feed:
         if torch.is_tensor(feed[k]):
@@ -129,6 +128,33 @@ def train_model(args):
 
         # fitting
         fit_voxel(voxels_src, voxels_tgt, args)
+        
+        renderer = get_mesh_renderer(image_size=256)
+        mesh1 = cubify(voxels_src, 0.5)
+        mesh1 = mesh1.to(args.device)
+        mesh2 = cubify(voxels_tgt, 0.5)
+        mesh2 = mesh2.to(args.device)
+        lights = PointLights(location=[[0, 0, -3]], device=args.device)
+        
+        num_povs = 15
+        rends = []
+        for i in range(num_povs):
+            theta = 360 * (i / num_povs)
+            R, T = look_at_view_transform(dist = 3., azim = theta)
+            # Prepare the camera:
+            cameras = FoVPerspectiveCameras(
+                R=R, T=T, fov=60, device=args.device
+            )
+
+            rend1 = renderer(mesh1, cameras=cameras, lights=lights)
+            rend1 = rend1.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
+            rends1.append((rend1 * 255).astype(np.uint8))
+
+            rend2 = renderer(mesh2, cameras=cameras, lights=lights)
+            rend2 = rend1.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
+            rends2.append((rend2 * 255).astype(np.uint8))
+        imageio.mimsave("out/voxel_pred.gif", rends1, fps = 15, loop = 0)
+        imageio.mimsave("out/voxel_gt.gif", rends2, fps = 15, loop = 0)
 
 
     elif args.type == "point":
