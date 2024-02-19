@@ -15,17 +15,19 @@ class SingleViewto3D(nn.Module):
             self.encoder = torch.nn.Sequential(*(list(vision_model.children())[:-1]))
             self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
 
-
+        b = args.batch_size
+        
         # define decoder
         if args.type == "vox":
             # Input: b x 512
             # Output: b x 32 x 32 x 32
-            self.fc1 = nn.Linear(args.batch_size * 512, args.batch_size * 2048)
+            
+            self.fc1 = nn.Linear(b * 512, b * 2048) # TODO: how to deal with batches
             self.conv1 = nn.ConvTranspose3d(256, 128, 4, 2, 1)
             self.conv2 = nn.ConvTranspose3d(128, 64, 4, 2, 1)
             self.conv3 = nn.ConvTranspose3d(64, 32, 4, 2, 1)
             self.conv4 = nn.ConvTranspose3d(32, 8, 4, 2, 1)
-            self.conv5 = nn.ConvTranspose3d(8, 1, 1, 2, 1)
+            self.conv5 = nn.ConvTranspose3d(8, 1, 1, 2, 1) # b x 32 x 32 x 32
         elif args.type == "point":
             # Input: b x 512
             # Output: b x args.n_points x 3  
