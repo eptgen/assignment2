@@ -128,6 +128,7 @@ def train_model(args):
 
         # fitting
         fit_voxel(voxels_src, voxels_tgt, args)
+        print("voxel shape", voxels_src)
         
         color = torch.tensor([0.7, 0.7, 1], device = args.device)
         
