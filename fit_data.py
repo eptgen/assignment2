@@ -160,7 +160,7 @@ def train_model(args):
             rends1.append((rend1 * 255).astype(np.uint8))
 
             rend2 = renderer(mesh2, cameras=cameras, lights=lights)
-            rend2 = rend1.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
+            rend2 = rend2.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
             rends2.append((rend2 * 255).astype(np.uint8))
         imageio.mimsave("out/voxel_pred.gif", rends1, fps = 15, loop = 0)
         imageio.mimsave("out/voxel_gt.gif", rends2, fps = 15, loop = 0)
