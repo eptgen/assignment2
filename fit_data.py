@@ -132,12 +132,12 @@ def train_model(args):
         color = torch.tensor([0.7, 0.7, 1], device = args.device)
         
         renderer = get_mesh_renderer(image_size=256)
-        mesh1 = cubify(voxels_src[0], 0.5)
+        mesh1 = cubify(voxels_src, 0.5)
         mesh1 = mesh1.to(args.device)
         mesh1_textures = torch.ones_like(mesh1.verts_packed(), device = args.device)
         mesh1_textures = mesh1_textures * color
         mesh1.textures = TexturesVertex(mesh1_textures.unsqueeze(0))
-        mesh2 = cubify(voxels_tgt[0], 0.5)
+        mesh2 = cubify(voxels_tgt, 0.5)
         mesh2 = mesh2.to(args.device)
         mesh2_textures = torch.ones_like(mesh2.verts_packed(), device = args.device)
         mesh2_textures = mesh2_textures * color
