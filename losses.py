@@ -1,5 +1,4 @@
 
-import numpy as np
 from pytorch3d.loss import mesh_laplacian_smoothing
 from pytorch3d.ops.knn import knn_points
 import torch
@@ -19,7 +18,7 @@ def chamfer_loss(point_cloud_src,point_cloud_tgt):
 	# implement chamfer loss from scratch
     nearest_1, _, _ = knn_points(point_cloud_src, point_cloud_tgt, K = 1)
     nearest_2, _, _ = knn_points(point_cloud_tgt, point_cloud_src, K = 1)
-    loss_chamfer = np.sum(nearest_1) + np.sum(nearest_2)
+    loss_chamfer = torch.sum(nearest_1) + torch.sum(nearest_2)
     return loss_chamfer
 
 def smoothness_loss(mesh_src):
