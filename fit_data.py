@@ -163,11 +163,13 @@ def train_model(args):
             rend2 = renderer(mesh2, cameras=cameras, lights=lights)
             rend2 = rend2.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
             rends2.append((rend2 * 255).astype(np.uint8))
+        """
         for i in range(len(rends1)):
             rend1 = rends1[i]
             rend2 = rends2[i]
             np.savetxt("rends1_" + str(i) + ".txt", rend1[:, :, 0])
             np.savetxt("rends2_" + str(i) + ".txt", rend2[:, :, 0])
+        """
         imageio.mimsave("out/voxel_pred.gif", rends1, format = "gif", fps = 15, loop = 0)
         imageio.mimsave("out/voxel_gt.gif", rends2, format = "gif", fps = 15, loop = 0)
 
