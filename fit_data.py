@@ -128,6 +128,7 @@ def train_model(args):
 
         # fitting
         fit_voxel(voxels_src, voxels_tgt, args)
+        voxels_src = torch.sigmoid(voxels_src)
         
         color = torch.tensor([0.7, 0.7, 1], device = args.device)
         
@@ -156,12 +157,17 @@ def train_model(args):
             )
 
             rend1 = renderer(mesh1, cameras=cameras, lights=lights)
-            rend1 = rend1.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
+            rend1 = rend1.numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
             rends1.append((rend1 * 255).astype(np.uint8))
 
             rend2 = renderer(mesh2, cameras=cameras, lights=lights)
-            rend2 = rend2.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
+            rend2 = rend2.numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
             rends2.append((rend2 * 255).astype(np.uint8))
+        for i in range(rends1):
+            rend1 = rends1[i]
+            rend2 = rends2[i]
+            np.savetxt("rends1_" + str(i) + ".txt", rend1)
+            np.savetxt("rends2_" + str(i) + ".txt", rend2)
         imageio.mimsave("out/voxel_pred.gif", rends1, fps = 15, loop = 0)
         imageio.mimsave("out/voxel_gt.gif", rends2, fps = 15, loop = 0)
 
