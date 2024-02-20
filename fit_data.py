@@ -168,8 +168,8 @@ def train_model(args):
             rend2 = rends2[i]
             np.savetxt("rends1_" + str(i) + ".txt", rend1[:, :, 0])
             np.savetxt("rends2_" + str(i) + ".txt", rend2[:, :, 0])
-        imageio.mimsave("out/voxel_pred.gif", rends1, fps = 15, loop = 0)
-        imageio.mimsave("out/voxel_gt.gif", rends2, fps = 15, loop = 0)
+        imageio.mimsave("out/voxel_pred.gif", rends1, format = "gif", fps = 15, loop = 0)
+        imageio.mimsave("out/voxel_gt.gif", rends2, format = "gif", fps = 15, loop = 0)
 
 
     elif args.type == "point":
