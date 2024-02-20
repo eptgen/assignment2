@@ -157,11 +157,11 @@ def train_model(args):
             )
 
             rend1 = renderer(mesh1, cameras=cameras, lights=lights)
-            rend1 = rend1.numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
+            rend1 = rend1.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
             rends1.append((rend1 * 255).astype(np.uint8))
 
             rend2 = renderer(mesh2, cameras=cameras, lights=lights)
-            rend2 = rend2.numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
+            rend2 = rend2.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
             rends2.append((rend2 * 255).astype(np.uint8))
         for i in range(rends1):
             rend1 = rends1[i]
