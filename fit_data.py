@@ -163,7 +163,7 @@ def train_model(args):
             rend2 = renderer(mesh2, cameras=cameras, lights=lights)
             rend2 = rend2.cpu().numpy()[0, ..., :3]  # (B, H, W, 4) -> (H, W, 3)
             rends2.append((rend2 * 255).astype(np.uint8))
-        for i in range(rends1):
+        for i in range(len(rends1)):
             rend1 = rends1[i]
             rend2 = rends2[i]
             np.savetxt("rends1_" + str(i) + ".txt", rend1)
