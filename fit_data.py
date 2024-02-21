@@ -151,8 +151,8 @@ def train_model(args):
             )
         rend1 = renderer(mesh1, cameras=cameras, lights=lights)
         rend2 = renderer(mesh2, cameras=cameras, lights=lights)
-        imageio.imsave("out/voxel_pred.png", rend1)
-        imageio.imsave("out/voxel_gt.png", rend2)
+        imageio.imsave("out/voxel_pred.png", (rend1.cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
+        imageio.imsave("out/voxel_gt.png", (rend2.cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
 
 
     elif args.type == "point":
@@ -186,8 +186,8 @@ def train_model(args):
         )
         rend1 = renderer(pc1, cameras=cameras, lights=lights)
         rend2 = renderer(pc2, cameras=cameras, lights=lights)
-        imageio.imsave("out/pointcloud_pred.png", rend1)
-        imageio.imsave("out/pointcloud_gt.png", rend2)
+        imageio.imsave("out/pointcloud_pred.png", (rend1.cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
+        imageio.imsave("out/pointcloud_gt.png", (rend2.cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
     
     elif args.type == "mesh":
         # initialization
@@ -213,8 +213,8 @@ def train_model(args):
         )
         rend1 = renderer(mesh_src, cameras=cameras, lights=lights)
         rend2 = renderer(mesh_tgt, cameras=cameras, lights=lights)
-        imageio.imsave("out/mesh_pred.png", rend1)
-        imageio.imsave("out/mesh_gt.png", rend2)
+        imageio.imsave("out/mesh_pred.png", (rend1.cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
+        imageio.imsave("out/mesh_gt.png", (rend2.cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
 
 
     
