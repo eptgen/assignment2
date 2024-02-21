@@ -23,7 +23,8 @@ class SingleViewto3D(nn.Module):
             # Input: b x 512
             # Output: b x 32 x 32 x 32
             
-            self.fc1 = nn.Linear(512, 2048) # b x (256, 2 x 2 x 2)
+            self.conv0 = nn.ConvTranspose3d(512, 256, 4, 2, 1) # b x (256, 2 x 2 x 2)
+            self.batch1 = nn.BatchNorm3d(256)
             self.conv1 = nn.ConvTranspose3d(256, 128, 4, 2, 1) # b x (128, 4 x 4 x 4)
             self.batch1 = nn.BatchNorm3d(128)
             self.conv2 = nn.ConvTranspose3d(128, 64, 4, 2, 1) # b x (64, 8 x 8 x 8)
@@ -65,8 +66,8 @@ class SingleViewto3D(nn.Module):
         # call decoder
         if args.type == "vox":
             # TODO:
-            voxels_pred = self.fc1(encoded_feat) # 2048
-            voxels_pred = torch.reshape(voxels_pred, (B, 256, 2, 2, 2))
+            voxels_pred = torch.reshape(voxels_pred, (B, 512, 1, 1, 1))
+            voxels_pred = F.sigmoid(F.relu(self.batch0(self.conv0(voxels_pred))))
             voxels_pred = F.sigmoid(F.relu(self.batch1(self.conv1(voxels_pred))))
             voxels_pred = F.sigmoid(F.relu(self.batch2(self.conv2(voxels_pred))))
             voxels_pred = F.sigmoid(F.relu(self.batch3(self.conv3(voxels_pred))))
