@@ -186,7 +186,7 @@ def train_model(args):
         rend1 = renderer(pc1, cameras=cameras, lights=lights)
         rend2 = renderer(pc2, cameras=cameras, lights=lights)
         imageio.imsave("out/pointcloud_pred.png", rend1)
-        imageio.imsave("out/pointcloud_gt.png", rend2)   
+        imageio.imsave("out/pointcloud_gt.png", rend2)
     
     elif args.type == "mesh":
         # initialization
@@ -205,6 +205,15 @@ def train_model(args):
         mesh2_textures = torch.ones_like(mesh_tgt.verts_packed(), device = args.device)
         mesh2_textures = mesh2_textures * color
         mesh_tgt.textures = TexturesVertex(mesh2_textures.unsqueeze(0))
+        
+        R, T = look_at_view_transform(dist = 3., azim = 72)
+        cameras = FoVPerspectiveCameras(
+            R=R, T=T, fov=60, device=args.device
+        )
+        rend1 = renderer(mesh_src, cameras=cameras, lights=lights)
+        rend2 = renderer(mesh_tgt, cameras=cameras, lights=lights)
+        imageio.imsave("out/mesh_pred.png", rend1)
+        imageio.imsave("out/mesh_gt.png", rend2)
 
 
     
