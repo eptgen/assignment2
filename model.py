@@ -25,9 +25,13 @@ class SingleViewto3D(nn.Module):
             
             self.fc1 = nn.Linear(512, 2048) # b x (256, 2 x 2 x 2)
             self.conv1 = nn.ConvTranspose3d(256, 128, 4, 2, 1) # b x (128, 4 x 4 x 4)
+            self.batch1 = nn.BatchNorm3d(128)
             self.conv2 = nn.ConvTranspose3d(128, 64, 4, 2, 1) # b x (64, 8 x 8 x 8)
+            self.batch2 = nn.BatchNorm3d(64)
             self.conv3 = nn.ConvTranspose3d(64, 32, 4, 2, 1) # b x (32, 16 x 16 x 16)
+            self.batch3 = nn.BatchNorm3d(32)
             self.conv4 = nn.ConvTranspose3d(32, 8, 4, 2, 1) # b x (8, 32 x 32 x 32)
+            self.batch4 = nn.BatchNorm3d(8)
             self.conv5 = nn.ConvTranspose3d(8, 1, 1) # b x (1, 32 x 32 x 32)
         elif args.type == "point":
             # Input: b x 512
@@ -63,10 +67,10 @@ class SingleViewto3D(nn.Module):
             # TODO:
             voxels_pred = self.fc1(encoded_feat) # 2048
             voxels_pred = torch.reshape(voxels_pred, (B, 256, 2, 2, 2))
-            voxels_pred = F.sigmoid(F.relu(F.batch_norm(self.conv1(voxels_pred))))
-            voxels_pred = F.sigmoid(F.relu(F.batch_norm(self.conv2(voxels_pred))))
-            voxels_pred = F.sigmoid(F.relu(F.batch_norm(self.conv3(voxels_pred))))
-            voxels_pred = F.sigmoid(F.relu(F.batch_norm(self.conv4(voxels_pred))))
+            voxels_pred = F.sigmoid(F.relu(self.batch1(self.conv1(voxels_pred))))
+            voxels_pred = F.sigmoid(F.relu(self.batch2(self.conv2(voxels_pred))))
+            voxels_pred = F.sigmoid(F.relu(self.batch3(self.conv3(voxels_pred))))
+            voxels_pred = F.sigmoid(F.relu(self.batch4(self.conv4(voxels_pred))))
             voxels_pred = F.sigmoid(self.conv5(voxels_pred))
             return voxels_pred
 
