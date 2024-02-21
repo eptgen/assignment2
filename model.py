@@ -2,6 +2,7 @@ from torchvision import models as torchvision_models
 from torchvision import transforms
 import time
 import torch.nn as nn
+import torch.nn.functional as F
 import torch
 from pytorch3d.utils import ico_sphere
 import pytorch3d
@@ -22,12 +23,12 @@ class SingleViewto3D(nn.Module):
             # Input: b x 512
             # Output: b x 32 x 32 x 32
             
-            self.fc1 = nn.Linear(b * 512, b * 2048) # TODO: how to deal with batches
-            self.conv1 = nn.ConvTranspose3d(256, 128, 4, 2, 1)
-            self.conv2 = nn.ConvTranspose3d(128, 64, 4, 2, 1)
-            self.conv3 = nn.ConvTranspose3d(64, 32, 4, 2, 1)
-            self.conv4 = nn.ConvTranspose3d(32, 8, 4, 2, 1)
-            self.conv5 = nn.ConvTranspose3d(8, 1, 1, 2, 1) # b x 32 x 32 x 32
+            self.fc1 = nn.Linear(512, 2048) # b x (256, 2 x 2 x 2)
+            self.conv1 = nn.ConvTranspose3d(256, 128, 4, 2, 1) # b x (128, 4 x 4 x 4)
+            self.conv2 = nn.ConvTranspose3d(128, 64, 4, 2, 1) # b x (64, 8 x 8 x 8)
+            self.conv3 = nn.ConvTranspose3d(64, 32, 4, 2, 1) # b x (32, 16 x 16 x 16)
+            self.conv4 = nn.ConvTranspose3d(32, 8, 4, 2, 1) # b x (8, 32 x 32 x 32)
+            self.conv5 = nn.ConvTranspose3d(8, 1, 1) # b x (1, 32 x 32 x 32)
         elif args.type == "point":
             # Input: b x 512
             # Output: b x args.n_points x 3  
@@ -60,7 +61,13 @@ class SingleViewto3D(nn.Module):
         # call decoder
         if args.type == "vox":
             # TODO:
-            # voxels_pred =             
+            voxels_pred = self.fc1(encoded_feat) # 2048
+            voxels_pred = torch.reshape(voxels_pred, (256, 2, 2, 2))
+            voxels_pred = F.sigmoid(F.relu(F.batch_norm(self.conv1(voxels_pred))))
+            voxels_pred = F.sigmoid(F.relu(F.batch_norm(self.conv2(voxels_pred))))
+            voxels_pred = F.sigmoid(F.relu(F.batch_norm(self.conv3(voxels_pred))))
+            voxels_pred = F.sigmoid(F.relu(F.batch_norm(self.conv4(voxels_pred))))
+            voxels_pred = F.sigmoid(self.conv5(voxels_pred))
             return voxels_pred
 
         elif args.type == "point":
