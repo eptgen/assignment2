@@ -180,7 +180,7 @@ def train_model(args):
         ).to(args.device)
         lights = PointLights(location=[[0, 0, -3]], device=args.device)
         
-        R, T = look_at_view_transform(dist = 3., azim = 72)
+        R, T = look_at_view_transform(dist = 2., azim = 72)
         cameras = FoVPerspectiveCameras(
             R=R, T=T, fov=60, device=args.device
         )
@@ -207,7 +207,7 @@ def train_model(args):
         mesh2_textures = mesh2_textures * color
         mesh_tgt.textures = TexturesVertex(mesh2_textures.unsqueeze(0))
         
-        R, T = look_at_view_transform(dist = 3., azim = 72)
+        R, T = look_at_view_transform(dist = 2., azim = 72)
         cameras = FoVPerspectiveCameras(
             R=R, T=T, fov=60, device=args.device
         )
