@@ -23,7 +23,7 @@ def get_args_parser():
     parser.add_argument('--n_points', default=5000, type=int)
     parser.add_argument('--w_chamfer', default=1.0, type=float)
     parser.add_argument('--w_smooth', default=0.1, type=float)
-    parser.add_argument('--device', default='cuda', type=str) 
+    parser.add_argument('--device', default='cuda', type=str)
     return parser
 
 def fit_mesh(mesh_src, mesh_tgt, args):
