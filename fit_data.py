@@ -165,6 +165,7 @@ def train_model(args):
         fit_pointcloud(pointclouds_src, pointclouds_tgt, args)     
         color = torch.tensor([0.7, 0.7, 1], device = args.device)
         pointclouds_src = pointclouds_src[0]
+        pointclouds_tgt = pointclouds_tgt[0]
         
         renderer = get_points_renderer(image_size=256)
         rgb1 = torch.ones_like(pointclouds_src, device = args.device) * color
