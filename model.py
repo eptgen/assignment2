@@ -24,7 +24,7 @@ class SingleViewto3D(nn.Module):
             # Output: b x 32 x 32 x 32
             
             self.conv0 = nn.ConvTranspose3d(512, 256, 4, 2, 1) # b x (256, 2 x 2 x 2)
-            self.batch1 = nn.BatchNorm3d(256)
+            self.batch0 = nn.BatchNorm3d(256)
             self.conv1 = nn.ConvTranspose3d(256, 128, 4, 2, 1) # b x (128, 4 x 4 x 4)
             self.batch1 = nn.BatchNorm3d(128)
             self.conv2 = nn.ConvTranspose3d(128, 64, 4, 2, 1) # b x (64, 8 x 8 x 8)
