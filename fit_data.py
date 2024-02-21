@@ -211,6 +211,7 @@ def train_model(args):
         cameras = FoVPerspectiveCameras(
             R=R, T=T, fov=60, device=args.device
         )
+        lights = PointLights(location=[[0, 0, -3]], device=args.device)
         rend1 = renderer(mesh_src, cameras=cameras, lights=lights)
         rend2 = renderer(mesh_tgt, cameras=cameras, lights=lights)
         imageio.imsave("out/mesh_pred.png", (rend1.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
