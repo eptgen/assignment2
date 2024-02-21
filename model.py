@@ -66,7 +66,7 @@ class SingleViewto3D(nn.Module):
         # call decoder
         if args.type == "vox":
             # TODO:
-            voxels_pred = torch.reshape(voxels_pred, (B, 512, 1, 1, 1))
+            voxels_pred = torch.reshape(encoded_feat, (B, 512, 1, 1, 1))
             voxels_pred = F.sigmoid(F.relu(self.batch0(self.conv0(voxels_pred))))
             voxels_pred = F.sigmoid(F.relu(self.batch1(self.conv1(voxels_pred))))
             voxels_pred = F.sigmoid(F.relu(self.batch2(self.conv2(voxels_pred))))
