@@ -159,7 +159,8 @@ def evaluate_model(args):
         # TODO:
         if (step % args.vis_freq) == 0:
         #     # visualization block
-            rend = render_voxel(predictions)
+            if args.type == "vox":
+                rend = render_voxel(predictions)
             plt.imsave(f'vis/{step}_{args.type}.png', rend)
       
 
