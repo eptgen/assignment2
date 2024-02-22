@@ -9,6 +9,7 @@ import pytorch3d
 from pytorch3d.ops import sample_points_from_meshes
 from pytorch3d.ops import knn_points
 import mcubes
+from utils import render_voxel
 import utils_vox
 import matplotlib.pyplot as plt 
 
@@ -156,10 +157,10 @@ def evaluate_model(args):
         metrics = evaluate(predictions, mesh_gt, thresholds, args)
 
         # TODO:
-        # if (step % args.vis_freq) == 0:
+        if (step % args.vis_freq) == 0:
         #     # visualization block
-        #     #  rend = 
-        #     plt.imsave(f'vis/{step}_{args.type}.png', rend)
+            rend = render_voxel(predictions)
+            plt.imsave(f'vis/{step}_{args.type}.png', rend)
       
 
         total_time = time.time() - start_time

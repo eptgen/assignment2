@@ -1,15 +1,18 @@
 import torch
 from pytorch3d.renderer import (
     AlphaCompositor,
-    RasterizationSettings,
+    HardPhongShader,
     MeshRenderer,
     MeshRasterizer,
+    PointLights,
     PointsRasterizationSettings,
     PointsRenderer,
     PointsRasterizer,
-    HardPhongShader,
+    RasterizationSettings,
+    TexturesVertex,
 )
 from pytorch3d.io import load_obj
+from pytorch3d.ops import cubify
 
 
 def get_device():
@@ -124,3 +127,21 @@ def load_cow_mesh(path="data/cow_mesh.obj"):
     vertices, faces, _ = load_obj(path)
     faces = faces.verts_idx
     return vertices, faces
+
+def render_voxel(voxels):
+    color = torch.tensor([0.7, 0.7, 1], device = args.device)
+    
+    renderer = get_mesh_renderer(image_size=256)
+    mesh = cubify(voxels, 0.5)
+    mesh = mesh1.to(args.device)
+    mesh_textures = torch.ones_like(mesh.verts_packed(), device = args.device)
+    mesh_textures = mesh_textures * color
+    mesh.textures = TexturesVertex(mesh_textures.unsqueeze(0))
+    lights = PointLights(location=[[0, 0, -3]], device=args.device)
+    
+    R, T = look_at_view_transform(dist = 3., azim = 72)
+    cameras = FoVPerspectiveCameras(
+            R=R, T=T, fov=60, device=args.device
+        )
+    rend = renderer(mesh1, cameras=cameras, lights=lights)
+    return rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)

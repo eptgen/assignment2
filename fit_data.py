@@ -13,7 +13,7 @@ from pytorch3d.structures import Meshes, Pointclouds
 from pytorch3d.utils import ico_sphere
 from r2n2_custom import R2N2
 import torch
-from utils import get_mesh_renderer, get_points_renderer
+from utils import get_mesh_renderer, get_points_renderer, render_voxel
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Model Fit', add_help=False)
@@ -130,29 +130,10 @@ def train_model(args):
         fit_voxel(voxels_src, voxels_tgt, args)
         voxels_src = torch.sigmoid(voxels_src)
         
-        color = torch.tensor([0.7, 0.7, 1], device = args.device)
-        
-        renderer = get_mesh_renderer(image_size=256)
-        mesh1 = cubify(voxels_src, 0.5)
-        mesh1 = mesh1.to(args.device)
-        mesh1_textures = torch.ones_like(mesh1.verts_packed(), device = args.device)
-        mesh1_textures = mesh1_textures * color
-        mesh1.textures = TexturesVertex(mesh1_textures.unsqueeze(0))
-        mesh2 = cubify(voxels_tgt, 0.5)
-        mesh2 = mesh2.to(args.device)
-        mesh2_textures = torch.ones_like(mesh2.verts_packed(), device = args.device)
-        mesh2_textures = mesh2_textures * color
-        mesh2.textures = TexturesVertex(mesh2_textures.unsqueeze(0))
-        lights = PointLights(location=[[0, 0, -3]], device=args.device)
-        
-        R, T = look_at_view_transform(dist = 3., azim = 72)
-        cameras = FoVPerspectiveCameras(
-                R=R, T=T, fov=60, device=args.device
-            )
-        rend1 = renderer(mesh1, cameras=cameras, lights=lights)
-        rend2 = renderer(mesh2, cameras=cameras, lights=lights)
-        imageio.imsave("out/voxel_pred.png", (rend1.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
-        imageio.imsave("out/voxel_gt.png", (rend2.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
+        rend1 = render_voxel(voxels_src)
+        rend2 = render_voxel(voxels_tgt)
+        imageio.imsave("out/voxel_pred.png", rend1)
+        imageio.imsave("out/voxel_gt.png", rend2)
 
 
     elif args.type == "point":
