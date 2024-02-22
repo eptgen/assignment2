@@ -9,8 +9,6 @@ def voxel_loss(voxel_src,voxel_tgt):
 	# voxel_tgt: b x h x w x d
 	# loss = 
 	# implement some loss for binary voxel grids
-    print("tgt", torch.max(voxel_tgt), torch.sum(voxel_tgt))
-    print("src", torch.max(torch.sigmoid(voxel_src)), torch.sum(torch.sigmoid(voxel_src)))
     loss = torch.nn.functional.binary_cross_entropy(torch.sigmoid(voxel_src), voxel_tgt)
     return loss
 
