@@ -144,4 +144,4 @@ def render_voxel(voxels):
             R=R, T=T, fov=60, device=args.device
         )
     rend = renderer(mesh1, cameras=cameras, lights=lights)
-    return rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)
+    return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)
