@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 from pytorch3d.renderer import (
     AlphaCompositor,
