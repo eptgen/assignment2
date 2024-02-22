@@ -121,7 +121,7 @@ def evaluate_model(args):
     model.to(args.device)
     model.eval()
 
-    start_iter = 0
+    start_iter = 1
     start_time = time.time()
 
     thresholds = [0.01, 0.02, 0.03, 0.04, 0.05]
