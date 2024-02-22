@@ -88,6 +88,7 @@ def evaluate(predictions, mesh_gt, thresholds, args):
         voxels_src = predictions
         H,W,D = voxels_src.shape[2:]
         vertices_src, faces_src = mcubes.marching_cubes(voxels_src.detach().cpu().squeeze().numpy(), isovalue=0.5)
+        print(vertices_src.shape)
         vertices_src = torch.tensor(vertices_src).float()
         faces_src = torch.tensor(faces_src.astype(int))
         mesh_src = pytorch3d.structures.Meshes([vertices_src], [faces_src])
@@ -153,7 +154,7 @@ def evaluate_model(args):
 
         if args.type == "vox":
             predictions = predictions.permute(0,1,4,3,2)
-            print("shape", predictions.detach().cpu().squeeze().numpy())
+            # print("shape", predictions.detach().cpu().squeeze().numpy())
         
         try:
             metrics = evaluate(predictions, mesh_gt, thresholds, args)
