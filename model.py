@@ -67,11 +67,11 @@ class SingleViewto3D(nn.Module):
         if args.type == "vox":
             # TODO:
             voxels_pred = torch.reshape(encoded_feat, (B, 512, 1, 1, 1))
-            voxels_pred = torch.sigmoid(F.relu(self.batch0(self.conv0(voxels_pred))))
-            voxels_pred = torch.sigmoid(F.relu(self.batch1(self.conv1(voxels_pred))))
-            voxels_pred = torch.sigmoid(F.relu(self.batch2(self.conv2(voxels_pred))))
-            voxels_pred = torch.sigmoid(F.relu(self.batch3(self.conv3(voxels_pred))))
-            voxels_pred = torch.sigmoid(F.relu(self.batch4(self.conv4(voxels_pred))))
+            voxels_pred = F.relu(self.batch0(self.conv0(voxels_pred)))
+            voxels_pred = F.relu(self.batch1(self.conv1(voxels_pred)))
+            voxels_pred = F.relu(self.batch2(self.conv2(voxels_pred)))
+            voxels_pred = F.relu(self.batch3(self.conv3(voxels_pred)))
+            voxels_pred = F.relu(self.batch4(self.conv4(voxels_pred)))
             voxels_pred = torch.sigmoid(self.conv5(voxels_pred))
             return voxels_pred
 
