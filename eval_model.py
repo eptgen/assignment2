@@ -88,7 +88,7 @@ def evaluate(predictions, mesh_gt, thresholds, args):
         voxels_src = predictions
         H,W,D = voxels_src.shape[2:]
         vertices_src, faces_src = mcubes.marching_cubes(voxels_src.detach().cpu().squeeze().numpy(), isovalue=0.5)
-        print(vertices_src.shape)
+        # print(vertices_src.shape)
         vertices_src = torch.tensor(vertices_src).float()
         faces_src = torch.tensor(faces_src.astype(int))
         mesh_src = pytorch3d.structures.Meshes([vertices_src], [faces_src])
@@ -166,7 +166,7 @@ def evaluate_model(args):
         if (step % args.vis_freq) == 0:
         #     # visualization block
             if args.type == "vox":
-                rend = render_voxel(predictions, args)
+                rend = render_voxel(predictions[0], args)
             plt.imsave(f'vis/{step}_{args.type}.png', rend)
       
 
