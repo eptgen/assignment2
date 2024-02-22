@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 def get_args_parser():
     parser = argparse.ArgumentParser('Singleto3D', add_help=False)
     parser.add_argument('--arch', default='resnet18', type=str)
-    parser.add_argument('--vis_freq', default=1000, type=int)
+    parser.add_argument('--vis_freq', default=100, type=int)
     parser.add_argument('--batch_size', default=1, type=int)
     parser.add_argument('--num_workers', default=0, type=int)
     parser.add_argument('--type', default='vox', choices=['vox', 'point', 'mesh'], type=str)
