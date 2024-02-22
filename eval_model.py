@@ -121,7 +121,7 @@ def evaluate_model(args):
     model.to(args.device)
     model.eval()
 
-    start_iter = 1
+    start_iter = 0
     start_time = time.time()
 
     thresholds = [0.01, 0.02, 0.03, 0.04, 0.05]
@@ -138,7 +138,6 @@ def evaluate_model(args):
     
     print("Starting evaluating !")
     max_iter = len(eval_loader)
-    print(len(eval_loader))
     for step in range(start_iter, max_iter):
         iter_start_time = time.time()
 
@@ -154,8 +153,12 @@ def evaluate_model(args):
 
         if args.type == "vox":
             predictions = predictions.permute(0,1,4,3,2)
-
-        metrics = evaluate(predictions, mesh_gt, thresholds, args)
+        
+        try:
+            metrics = evaluate(predictions, mesh_gt, thresholds, args)
+        except ValueError:
+            print("aborting", step)
+            continue
 
         # TODO:
         if (step % args.vis_freq) == 0:
