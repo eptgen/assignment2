@@ -128,7 +128,7 @@ def load_cow_mesh(path="data/cow_mesh.obj"):
     faces = faces.verts_idx
     return vertices, faces
 
-def render_voxel(voxels):
+def render_voxel(voxels, args):
     color = torch.tensor([0.7, 0.7, 1], device = args.device)
     
     renderer = get_mesh_renderer(image_size=256)

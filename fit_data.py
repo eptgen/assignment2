@@ -130,8 +130,8 @@ def train_model(args):
         fit_voxel(voxels_src, voxels_tgt, args)
         voxels_src = torch.sigmoid(voxels_src)
         
-        rend1 = render_voxel(voxels_src)
-        rend2 = render_voxel(voxels_tgt)
+        rend1 = render_voxel(voxels_src, args)
+        rend2 = render_voxel(voxels_tgt, args)
         imageio.imsave("out/voxel_pred.png", rend1)
         imageio.imsave("out/voxel_gt.png", rend2)
 
