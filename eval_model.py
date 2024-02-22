@@ -153,6 +153,7 @@ def evaluate_model(args):
 
         if args.type == "vox":
             predictions = predictions.permute(0,1,4,3,2)
+            print("shape", predictions.shape)
         
         try:
             metrics = evaluate(predictions, mesh_gt, thresholds, args)
