@@ -133,7 +133,7 @@ def render_voxel(voxels, args):
     
     renderer = get_mesh_renderer(image_size=256)
     mesh = cubify(voxels, 0.5)
-    mesh = mesh1.to(args.device)
+    mesh = mesh.to(args.device)
     mesh_textures = torch.ones_like(mesh.verts_packed(), device = args.device)
     mesh_textures = mesh_textures * color
     mesh.textures = TexturesVertex(mesh_textures.unsqueeze(0))
@@ -143,5 +143,5 @@ def render_voxel(voxels, args):
     cameras = FoVPerspectiveCameras(
             R=R, T=T, fov=60, device=args.device
         )
-    rend = renderer(mesh1, cameras=cameras, lights=lights)
+    rend = renderer(mesh, cameras=cameras, lights=lights)
     return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)
