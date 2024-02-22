@@ -11,6 +11,7 @@ from pytorch3d.renderer import (
     RasterizationSettings,
     TexturesVertex,
 )
+from pytorch3d.renderer.cameras import look_at_view_transform
 from pytorch3d.io import load_obj
 from pytorch3d.ops import cubify
 
