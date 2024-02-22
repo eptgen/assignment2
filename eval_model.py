@@ -89,7 +89,7 @@ def evaluate(predictions, mesh_gt, thresholds, args):
         H,W,D = voxels_src.shape[2:]
         vertices_src, faces_src = mcubes.marching_cubes(voxels_src.detach().cpu().squeeze().numpy(), isovalue=0.3)
         # print(vertices_src.shape)
-        print(vertices_src.shape)
+        print(torch.max(voxels_src))
         vertices_src = torch.tensor(vertices_src).float()
         faces_src = torch.tensor(faces_src.astype(int))
         mesh_src = pytorch3d.structures.Meshes([vertices_src], [faces_src])
