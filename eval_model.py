@@ -138,6 +138,7 @@ def evaluate_model(args):
     
     print("Starting evaluating !")
     max_iter = len(eval_loader)
+    print(len(eval_loader))
     for step in range(start_iter, max_iter):
         iter_start_time = time.time()
 
