@@ -1,6 +1,7 @@
 import torch
 from pytorch3d.renderer import (
     AlphaCompositor,
+    FoVPerspectiveCameras,
     HardPhongShader,
     MeshRenderer,
     MeshRasterizer,
