@@ -85,7 +85,7 @@ class SingleViewto3D(nn.Module):
             pointclouds_pred = self.gelu2(self.fc2(pointclouds_pred))
             pointclouds_pred = self.fc3(pointclouds_pred)
             pointclouds_pred = torch.reshape(pointclouds_pred, (B, args.n_points, 3))
-            print(pointclouds_pred.shape)
+            # print(pointclouds_pred.shape)
             return pointclouds_pred
 
         elif args.type == "mesh":
