@@ -148,25 +148,8 @@ def train_model(args):
         pointclouds_src = pointclouds_src[0]
         pointclouds_tgt = pointclouds_tgt[0]
         
-        renderer = get_points_renderer(image_size=256)
-        rgb1 = torch.ones_like(pointclouds_src, device = args.device) * color
-        pc1 = Pointclouds(
-            points=pointclouds_src.unsqueeze(0),
-            features=rgb1.unsqueeze(0),
-        ).to(args.device)
-        rgb2 = torch.ones_like(pointclouds_tgt, device = args.device) * color
-        pc2 = Pointclouds(
-            points=pointclouds_tgt.unsqueeze(0),
-            features=rgb2.unsqueeze(0),
-        ).to(args.device)
-        lights = PointLights(location=[[0, 0, -3]], device=args.device)
-        
-        R, T = look_at_view_transform(dist = 2., azim = 72)
-        cameras = FoVPerspectiveCameras(
-            R=R, T=T, fov=60, device=args.device
-        )
-        rend1 = renderer(pc1, cameras=cameras, lights=lights)
-        rend2 = renderer(pc2, cameras=cameras, lights=lights)
+        rend1 = render_cloud(pointclouds_src, args)
+        rend2 = render_cloud(pointclouds_tgt, args)
         imageio.imsave("out/pointcloud_pred.png", (rend1.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
         imageio.imsave("out/pointcloud_gt.png", (rend2.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
     

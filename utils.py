@@ -1,5 +1,7 @@
 import numpy as np
 import torch
+from pytorch3d.io import load_obj
+from pytorch3d.ops import cubify
 from pytorch3d.renderer import (
     AlphaCompositor,
     FoVPerspectiveCameras,
@@ -14,8 +16,7 @@ from pytorch3d.renderer import (
     TexturesVertex,
 )
 from pytorch3d.renderer.cameras import look_at_view_transform
-from pytorch3d.io import load_obj
-from pytorch3d.ops import cubify
+from pytorch3d.structures import Pointclouds
 
 
 def get_device():
@@ -147,4 +148,20 @@ def render_voxel(voxels, args):
             R=R, T=T, fov=60, device=args.device
         )
     rend = renderer(mesh, cameras=cameras, lights=lights)
+    return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)
+    
+def render_cloud(points, args):
+    renderer = get_points_renderer(image_size=256)
+    rgb = torch.ones_like(points, device = args.device) * color
+    pc = Pointclouds(
+        points=points.unsqueeze(0),
+        features=rgb.unsqueeze(0),
+    ).to(args.device)
+    lights = PointLights(location=[[0, 0, -3]], device=args.device)
+    
+    R, T = look_at_view_transform(dist = 2., azim = 72)
+    cameras = FoVPerspectiveCameras(
+        R=R, T=T, fov=60, device=args.device
+    )
+    rend = renderer(pc, cameras=cameras, lights=lights)
     return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)
