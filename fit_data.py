@@ -143,8 +143,7 @@ def train_model(args):
         pointclouds_tgt = sample_points_from_meshes(mesh_tgt, args.n_points)
 
         # fitting
-        fit_pointcloud(pointclouds_src, pointclouds_tgt, args)     
-        color = torch.tensor([0.7, 0.7, 1], device = args.device)
+        fit_pointcloud(pointclouds_src, pointclouds_tgt, args)
         pointclouds_src = pointclouds_src[0]
         pointclouds_tgt = pointclouds_tgt[0]
         

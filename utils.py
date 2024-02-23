@@ -151,6 +151,7 @@ def render_voxel(voxels, args):
     return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)
     
 def render_cloud(points, args):
+    color = torch.tensor([0.7, 0.7, 1], device = args.device)
     renderer = get_points_renderer(image_size=256)
     rgb = torch.ones_like(points, device = args.device) * color
     pc = Pointclouds(
