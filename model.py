@@ -38,9 +38,9 @@ class SingleViewto3D(nn.Module):
             # Input: b x 512
             # Output: b x args.n_points x 3  
             self.n_point = args.n_points
-            self.fc1 = nn.fc(512, 1024)
-            self.fc2 = nn.fc(1024, 2048)
-            self.fc3 = nn.fc(2048, 3 * args.n_points)
+            self.fc1 = nn.Linear(512, 1024)
+            self.fc2 = nn.Linear(1024, 2048)
+            self.fc3 = nn.Linear(2048, 3 * args.n_points)
         elif args.type == "mesh":
             # Input: b x 512
             # Output: b x mesh_pred.verts_packed().shape[0] x 3  
