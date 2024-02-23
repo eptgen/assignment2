@@ -9,7 +9,7 @@ import pytorch3d
 from pytorch3d.ops import sample_points_from_meshes
 from pytorch3d.ops import knn_points
 import mcubes
-from utils import render_voxel
+from utils import render_cloud, render_voxel
 import utils_vox
 import matplotlib.pyplot as plt 
 
@@ -168,6 +168,8 @@ def evaluate_model(args):
         #     # visualization block
             if args.type == "vox":
                 rend = render_voxel(predictions[0], args)
+            elif args.type == "point":
+                rend = render_cloud(predictions[0], args)
             plt.imsave(f'vis/{step}_{args.type}.png', rend)
       
 
