@@ -40,7 +40,7 @@ class SingleViewto3D(nn.Module):
             self.n_point = args.n_points
             self.fc1 = nn.Linear(512, 1024)
             self.fc2 = nn.Linear(1024, 2048)
-            self.fc3 = nn.Linear(2048, 3 * args.n_points)
+            self.fc3 = nn.Linear(2048, 3 * self.n_point)
             self.gelu1 = nn.GELU()
             self.gelu2 = nn.GELU()
         elif args.type == "mesh":
