@@ -16,7 +16,7 @@ def get_args_parser():
     parser.add_argument("--arch", default="resnet18", type=str)
     parser.add_argument("--lr", default=1e-4, type=float)
     parser.add_argument("--max_iter", default=100000, type=int)
-    parser.add_argument("--batch_size", default=32, type=int)
+    parser.add_argument("--batch_size", default=128, type=int)
     parser.add_argument("--num_workers", default=4, type=int)
     parser.add_argument(
         "--type", default="vox", choices=["vox", "point", "mesh"], type=str
