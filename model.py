@@ -41,7 +41,8 @@ class SingleViewto3D(nn.Module):
             self.fc1 = nn.Linear(512, 1024)
             self.fc2 = nn.Linear(1024, 2048)
             self.fc3 = nn.Linear(2048, 3 * args.n_points)
-            self.gelu = nn.GELU()
+            self.gelu1 = nn.GELU()
+            self.gelu2 = nn.GELU()
         elif args.type == "mesh":
             # Input: b x 512
             # Output: b x mesh_pred.verts_packed().shape[0] x 3  
@@ -80,9 +81,9 @@ class SingleViewto3D(nn.Module):
 
         elif args.type == "point":
             # TODO:
-            pointclouds_pred = self.gelu(self.fc1(encoded_feat))
-            pointclouds_pred = self.gelu(self.fc2(pointclouds_pred))
-            pointclouds_pred = self.gelu(self.fc3(pointclouds_pred))
+            pointclouds_pred = self.gelu1(self.fc1(encoded_feat))
+            pointclouds_pred = self.gelu2(self.fc2(pointclouds_pred))
+            pointclouds_pred = self.fc3(pointclouds_pred)
             pointclouds_pred = torch.reshape(pointclouds_pred, (B, args.n_points, 3))
             return pointclouds_pred
 
