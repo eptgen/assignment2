@@ -38,8 +38,9 @@ class SingleViewto3D(nn.Module):
             # Input: b x 512
             # Output: b x args.n_points x 3  
             self.n_point = args.n_points
-            # TODO:
-            # self.decoder =             
+            self.fc1 = nn.fc(512, 1024)
+            self.fc2 = nn.fc(1024, 2048)
+            self.fc3 = nn.fc(2048, 3 * args.n_points)
         elif args.type == "mesh":
             # Input: b x 512
             # Output: b x mesh_pred.verts_packed().shape[0] x 3  
@@ -78,12 +79,15 @@ class SingleViewto3D(nn.Module):
 
         elif args.type == "point":
             # TODO:
-            # pointclouds_pred =             
+            pointclouds_pred = F.relu(self.fc1(encoded_feat))
+            pointclouds_pred = F.relu(self.fc2(pointclouds_pred))
+            pointclouds_pred = F.relu(self.fc3(pointclouds_pred))
+            pointclouds_pred = torch.reshape(pointclouds_pred, (B, args.n_points, 3))
             return pointclouds_pred
 
         elif args.type == "mesh":
             # TODO:
-            # deform_vertices_pred =             
+            # deform_vertices_pred =
             mesh_pred = self.mesh_pred.offset_verts(deform_vertices_pred.reshape([-1,3]))
             return  mesh_pred          
 
