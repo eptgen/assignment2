@@ -119,7 +119,6 @@ def train_model(args):
         prediction_3d = model(images_gt, args)
 
         loss = calculate_loss(prediction_3d, ground_truth_3d, args)
-        print(prediction_3d.shape)
 
         optimizer.zero_grad()
         loss.backward()
