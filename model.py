@@ -78,7 +78,7 @@ class SingleViewto3D(nn.Module):
         elif args.type == "point":
             # TODO:
             pointclouds_pred = F.relu(self.fc(encoded_feat))
-            pointclouds_pred = torch.reshape(pointclouds_pred, (B, self.n_points, 3))
+            pointclouds_pred = torch.reshape(pointclouds_pred, (B, self.n_point, 3))
             return pointclouds_pred
 
         elif args.type == "mesh":
