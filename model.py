@@ -48,6 +48,11 @@ class SingleViewto3D(nn.Module):
             # Output: b x mesh_pred.verts_packed().shape[0] x 3  
             # try different mesh initializations
             mesh_pred = ico_sphere(4, self.device)
+            self.fc1 = nn.Linear(512, 1024)
+            self.fc2 = nn.Linear(1024, 2048)
+            self.fc3 = nn.Linear(2048, mesh_pred.verts_packed().shape[0] * 3)
+            self.gelu1 = nn.GELU()
+            self.gelu2 == nn.GELU()
             self.mesh_pred = pytorch3d.structures.Meshes(mesh_pred.verts_list()*args.batch_size, mesh_pred.faces_list()*args.batch_size)
             # TODO:
             # self.decoder =             
@@ -91,6 +96,10 @@ class SingleViewto3D(nn.Module):
         elif args.type == "mesh":
             # TODO:
             # deform_vertices_pred =
+            deform_vertices_pred = self.gelu1(self.fc1(encoded_feat))
+            deform_vertices_pred = self.gelu2(self.fc2(deform_vertices_pred))
+            deform_vertices_pred = self.fc3(deform_vertices_pred)
+            deform_vertices_pred = torch.reshape(deform_vertices_pred, (B, args.n_points, 3))
             mesh_pred = self.mesh_pred.offset_verts(deform_vertices_pred.reshape([-1,3]))
             return  mesh_pred          
 

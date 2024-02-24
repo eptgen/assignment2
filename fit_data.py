@@ -13,7 +13,7 @@ from pytorch3d.structures import Meshes, Pointclouds
 from pytorch3d.utils import ico_sphere
 from r2n2_custom import R2N2
 import torch
-from utils import get_mesh_renderer, get_points_renderer, render_voxel
+from utils import get_mesh_renderer, get_points_renderer, render_cloud, render_mesh, render_voxel
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Model Fit', add_help=False)
@@ -160,25 +160,11 @@ def train_model(args):
 
         # fitting
         fit_mesh(mesh_src, mesh_tgt, args)
-        color = torch.tensor([0.7, 0.7, 1], device = args.device)
         
-        renderer = get_mesh_renderer(image_size=256)
-        mesh1_textures = torch.ones_like(mesh_src.verts_packed(), device = args.device)
-        mesh1_textures = mesh1_textures * color
-        mesh_src.textures = TexturesVertex(mesh1_textures.unsqueeze(0))
-        mesh2_textures = torch.ones_like(mesh_tgt.verts_packed(), device = args.device)
-        mesh2_textures = mesh2_textures * color
-        mesh_tgt.textures = TexturesVertex(mesh2_textures.unsqueeze(0))
-        
-        R, T = look_at_view_transform(dist = 2., azim = 72)
-        cameras = FoVPerspectiveCameras(
-            R=R, T=T, fov=60, device=args.device
-        )
-        lights = PointLights(location=[[0, 0, -3]], device=args.device)
-        rend1 = renderer(mesh_src, cameras=cameras, lights=lights)
-        rend2 = renderer(mesh_tgt, cameras=cameras, lights=lights)
-        imageio.imsave("out/mesh_pred.png", (rend1.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
-        imageio.imsave("out/mesh_gt.png", (rend2.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
+        rend1 = render_mesh(mesh_src, args)
+        rend2 = render_mesh(mesh_tgt, args)
+        imageio.imsave("out/mesh_pred.png", rend1)
+        imageio.imsave("out/mesh_gt.png", rend2)
 
 
     
