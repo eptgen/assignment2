@@ -101,5 +101,5 @@ class SingleViewto3D(nn.Module):
             deform_vertices_pred = self.fc3(deform_vertices_pred)
             deform_vertices_pred = torch.reshape(deform_vertices_pred, (B, args.n_points, 3))
             mesh_pred = self.mesh_pred.offset_verts(deform_vertices_pred.reshape([-1,3]))
-            return  mesh_pred          
+            return mesh_pred
 
