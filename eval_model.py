@@ -1,5 +1,6 @@
 import argparse
 import imageio
+import numpy as np
 import time
 import torch
 from model import SingleViewto3D
