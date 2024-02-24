@@ -141,7 +141,7 @@ def render_gif(renderer, model, args, num_povs):
             R=R, T=T, fov=60, device=args.device
         )
         lights = PointLights(location=[[0, 0, -3]], device=args.device)
-        rend = renderer(mesh, cameras=cameras, lights=lights)
+        rend = renderer(model, cameras=cameras, lights=lights)
         rends.append((rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
     return rends
     
