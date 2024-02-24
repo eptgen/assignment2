@@ -132,7 +132,7 @@ def load_cow_mesh(path="data/cow_mesh.obj"):
     faces = faces.verts_idx
     return vertices, faces
     
-def render_gif(renderer, model, num_povs):
+def render_gif(renderer, model, args, num_povs):
     rends = []
     for i in range(num_povs):
         theta = 360 * i * (1 / num_povs)
@@ -155,7 +155,7 @@ def render_voxel(voxels, args):
     mesh_textures = torch.ones_like(mesh.verts_packed(), device = args.device)
     mesh_textures = mesh_textures * color
     mesh.textures = TexturesVertex(mesh_textures.unsqueeze(0))
-    return render_gif(renderer, mesh, 10)
+    return render_gif(renderer, mesh, args, 10)
     
 def render_cloud(points, args):
     color = torch.tensor([0.7, 0.7, 1], device = args.device)
@@ -167,7 +167,7 @@ def render_cloud(points, args):
     ).to(args.device)
     lights = PointLights(location=[[0, 0, -3]], device=args.device)
     
-    return render_gif(renderer, pc, 10)
+    return render_gif(renderer, pc, args, 10)
     
 def render_mesh(mesh, args):
     color = torch.tensor([0.7, 0.7, 1], device = args.device)
@@ -177,4 +177,4 @@ def render_mesh(mesh, args):
     mesh_textures = mesh_textures * color
     mesh.textures = TexturesVertex(mesh_textures.unsqueeze(0))
     
-    return render_gif(renderer, mesh, 10)
+    return render_gif(renderer, mesh, args, 10)
