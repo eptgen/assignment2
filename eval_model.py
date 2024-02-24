@@ -30,7 +30,7 @@ def get_args_parser():
     return parser
 
 def preprocess(feed_dict, args):
-    for k in ['images']:
+    for k in feed_dict['images']:
         feed_dict[k] = feed_dict[k].to(args.device)
 
     images = feed_dict['images'].squeeze(1)
@@ -175,10 +175,7 @@ def evaluate_model(args):
                 rend = render_mesh(predictions[0], args)
             # plt.imsave(f'vis/{step}_{args.type}.png', rend)
             imageio.mimsave(f'vis/{step}_{args.type}.gif', rend, fps = 15, loop = 0)
-            tmp = args.device
-            args.device = "cpu"
             imageio.mimsave(f'vis/{step}_{args.type}_gt.gif', render_mesh(mesh_gt[0], args), fps = 15, loop = 0)
-            args.device = tmp
             plt.imsave(f'vis/{step}_{args.type}_image_gt.png', images_gt[0])
       
 
