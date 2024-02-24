@@ -31,7 +31,7 @@ def get_args_parser():
 
 def preprocess(feed_dict, args):
     feed_dict["mesh"] = feed_dict["mesh"].to(args.device)
-    for k in feed_dict["images"]:
+    for k in range(len(feed_dict["images"])):
         feed_dict["images"][k] = feed_dict["images"][k].to(args.device)
 
     images = feed_dict['images'].squeeze(1)
