@@ -9,7 +9,7 @@ import pytorch3d
 from pytorch3d.ops import sample_points_from_meshes
 from pytorch3d.ops import knn_points
 import mcubes
-from utils import render_cloud, render_voxel
+from utils import render_cloud, render_mesh, render_voxel
 import utils_vox
 import matplotlib.pyplot as plt 
 
