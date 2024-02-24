@@ -52,7 +52,7 @@ class SingleViewto3D(nn.Module):
             self.fc2 = nn.Linear(1024, 2048)
             self.fc3 = nn.Linear(2048, mesh_pred.verts_packed().shape[0] * 3)
             self.gelu1 = nn.GELU()
-            self.gelu2 == nn.GELU()
+            self.gelu2 = nn.GELU()
             self.mesh_pred = pytorch3d.structures.Meshes(mesh_pred.verts_list()*args.batch_size, mesh_pred.faces_list()*args.batch_size)
             # TODO:
             # self.decoder =             
