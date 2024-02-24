@@ -170,7 +170,7 @@ def evaluate_model(args):
                 rend = render_voxel(predictions[0], args)
             elif args.type == "point":
                 rend = render_cloud(predictions[0], args)
-            elif args.type == "mesh:
+            elif args.type == "mesh":
                 rend = render_mesh(predictions[0], args)
             plt.imsave(f'vis/{step}_{args.type}.png', rend)
       
