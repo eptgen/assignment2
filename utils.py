@@ -175,10 +175,16 @@ def render_mesh(mesh, args):
     mesh_textures = mesh_textures * color
     mesh.textures = TexturesVertex(mesh_textures.unsqueeze(0))
     
-    R, T = look_at_view_transform(dist = 2., azim = 72)
-    cameras = FoVPerspectiveCameras(
-        R=R, T=T, fov=60, device=args.device
-    )
-    lights = PointLights(location=[[0, 0, -3]], device=args.device)
-    rend = renderer(mesh, cameras=cameras, lights=lights)
-    return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)
+    num_povs = 10
+    rends = []
+    for i in range(num_povs):
+        theta = 360 * i * (1 / num_povs)
+        R, T = look_at_view_transform(dist = 2., azim = theta)
+        cameras = FoVPerspectiveCameras(
+            R=R, T=T, fov=60, device=args.device
+        )
+        lights = PointLights(location=[[0, 0, -3]], device=args.device)
+        rend = renderer(mesh, cameras=cameras, lights=lights)
+        rends.append((rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
+        
+    return rends

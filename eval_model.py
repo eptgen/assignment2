@@ -172,7 +172,8 @@ def evaluate_model(args):
                 rend = render_cloud(predictions[0], args)
             elif args.type == "mesh":
                 rend = render_mesh(predictions[0], args)
-            plt.imsave(f'vis/{step}_{args.type}.png', rend)
+            # plt.imsave(f'vis/{step}_{args.type}.png', rend)
+            imageio.mimsave(f'vis/{step}_{args.type}.gif', rend, fps = 15, loop = 0)
       
 
         total_time = time.time() - start_time
