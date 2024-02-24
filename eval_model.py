@@ -176,7 +176,7 @@ def evaluate_model(args):
                 rend = render_mesh(predictions[0], args)
             # plt.imsave(f'vis/{step}_{args.type}.png', rend)
             imageio.mimsave(f'vis/{step}_{args.type}.gif', rend, fps = 15, loop = 0)
-            imageio.mimsave(f'vis/{step}_{args.type}_gt.gif', render_mesh(mesh_gt[0].to(args.device)[0], args), fps = 15, loop = 0)
+            imageio.mimsave(f'vis/{step}_gt.gif', render_mesh(mesh_gt[0].to(args.device)[0], args), fps = 15, loop = 0)
             # print(images_gt.shape)
             imageio.imsave(f'vis/{step}_{args.type}_image_gt.png', (feed_dict["images"].detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
             # plt.imsave(f'vis/{step}_{args.type}_image_gt.png', images_gt.cpu()[0])
