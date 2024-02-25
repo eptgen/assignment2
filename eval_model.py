@@ -28,6 +28,7 @@ def get_args_parser():
     parser.add_argument('--load_checkpoint', action='store_true')  
     parser.add_argument('--device', default='cuda', type=str) 
     parser.add_argument('--load_feat', action='store_true') 
+    parser.add_argument('--save_gt', action='store_true') 
     return parser
 
 def preprocess(feed_dict, args):
@@ -176,14 +177,15 @@ def evaluate_model(args):
                 rend = render_mesh(predictions[0], args)
             # plt.imsave(f'vis/{step}_{args.type}.png', rend)
             imageio.mimsave(f'vis/{step}_{args.type}.gif', rend, fps = 15, loop = 0)
-            gt_imgs = render_mesh(feed_dict["mesh"].to(args.device), args)
-            i = 0
-            for gt_img in gt_imgs:
-                imageio.imsave(f'vis/{step}_{i}_gt.png', gt_img)
-                i += 1
-            # print(images_gt.shape)
-            imageio.imsave(f'vis/{step}_{args.type}_image_gt.png', (feed_dict["images"].detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
-            # plt.imsave(f'vis/{step}_{args.type}_image_gt.png', images_gt.cpu()[0])
+            if args.save_gt:
+                gt_imgs = render_mesh(feed_dict["mesh"].to(args.device), args)
+                i = 0
+                for gt_img in gt_imgs:
+                    imageio.imsave(f'vis/{step}_{i}_gt.png', gt_img)
+                    i += 1
+                # print(images_gt.shape)
+                imageio.imsave(f'vis/{step}_{args.type}_image_gt.png', (feed_dict["images"].detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
+                # plt.imsave(f'vis/{step}_{args.type}_image_gt.png', images_gt.cpu()[0])
       
 
         total_time = time.time() - start_time
