@@ -28,7 +28,8 @@ def get_args_parser():
     parser.add_argument('--load_checkpoint', action='store_true')  
     parser.add_argument('--device', default='cuda', type=str) 
     parser.add_argument('--load_feat', action='store_true') 
-    parser.add_argument('--save_gt', action='store_true') 
+    parser.add_argument('--save_gt', action='store_true')
+    parser.add_argument("--start_shape", default="none", type=str) 
     return parser
 
 def preprocess(feed_dict, args):
@@ -48,8 +49,14 @@ def save_plot(thresholds, avg_f1_score, args):
     ax.plot(thresholds, avg_f1_score, marker='o')
     ax.set_xlabel('Threshold')
     ax.set_ylabel('F1-score')
-    ax.set_title(f'Evaluation {args.type}')
-    plt.savefig(f'eval_{args.type}', bbox_inches='tight')
+    title = f'Evaluation {args.type}'
+    if args.start_shape != "none":
+        title = f'Evaluation {args.type} ({args.start_shape} Shape)'
+    ax.set_title(title)
+    fig_name = f'eval_{args.type}'
+    if args.start_shape != "none":
+        fig_name = f'eval_{args.type}_{args.start_shape}'
+    plt.savefig(fig_name, bbox_inches='tight')
 
 
 def compute_sampling_metrics(pred_points, gt_points, thresholds, eps=1e-8):
@@ -137,7 +144,10 @@ def evaluate_model(args):
     avg_r_score = []
 
     if args.load_checkpoint:
-        checkpoint = torch.load(f'checkpoint_{args.type}.pth')
+        checkpoint_name = f'checkpoint_{args.type}.pth'
+        if args.start_shape != "none":
+            checkpoint_name = f'checkpoint_{args.type}_{args.start_shape}.pth'
+        checkpoint = torch.load(checkpoint_name)
         model.load_state_dict(checkpoint['model_state_dict'])
         print(f"Succesfully loaded iter {start_iter}")
     
@@ -176,7 +186,10 @@ def evaluate_model(args):
             elif args.type == "mesh":
                 rend = render_mesh(predictions[0], args)
             # plt.imsave(f'vis/{step}_{args.type}.png', rend)
-            imageio.mimsave(f'vis/{step}_{args.type}.gif', rend, fps = 15, loop = 0)
+            vis_filename = f'vis/{step}_{args.type}.gif'
+            if args.start_shape != "none":
+                vis_filename = f'vis/{step}_{args.type}_{args.start_shape}.gif'
+            imageio.mimsave(vis_filename, rend, fps = 15, loop = 0)
             if args.save_gt:
                 gt_imgs = render_mesh(feed_dict["mesh"].to(args.device), args)
                 i = 0
