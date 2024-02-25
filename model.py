@@ -15,7 +15,7 @@ def get_shape(shape, device):
     if shape == "torus2":
         return torus(0.5, 1, 61, 42, device = device)
     if shape == "checkerboard":
-        return checkerboard(25, device = device)
+        return checkerboard(25).to(device)
     
 class SingleViewto3D(nn.Module):
     def __init__(self, args):
