@@ -146,6 +146,7 @@ def render_gif(renderer, model, args, num_povs):
     return rends
     
 def render_from_angle(mesh, angle, args):
+    color = torch.tensor([0.7, 0.7, 1], device = args.device)
     renderer = get_mesh_renderer(image_size=256)
     mesh_textures = torch.ones_like(mesh.verts_packed(), device = args.device)
     mesh_textures = mesh_textures * color
