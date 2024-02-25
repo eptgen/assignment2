@@ -107,7 +107,6 @@ def train_model(args):
         
     test_vis = []
     test_vis_rend = []
-    for i in test_vis: test_vis_rend.append([])
     vis_step = 100
     if args.visualize:
         test_loader = torch.utils.data.DataLoader(
@@ -126,6 +125,7 @@ def train_model(args):
             if args.load_feat:
                 images = torch.stack(feed_dict['feats']).to(args.device)
             test_vis.append((images, images_rgb))
+    for i in test_vis: test_vis_rend.append([])
     
     delta_theta = 360 * args.max_iter / args.save_freq
     theta = 0
