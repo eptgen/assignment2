@@ -4,9 +4,19 @@ import time
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
-from pytorch3d.utils import ico_sphere
+from pytorch3d.utils import checkerboard, ico_sphere, torus
 import pytorch3d
 
+def get_shape(shape, device):
+    if shape == "sphere":
+        return ico_sphere(4, device)
+    if shape == "torus1":
+        return torus(r, R, 42, 61, device = device)
+    if shape == "torus2":
+        return torus(r, R, 61, 42, device = device)
+    if shape == "checkerboard":
+        return checkerboard(25, device = device)
+    
 class SingleViewto3D(nn.Module):
     def __init__(self, args):
         super(SingleViewto3D, self).__init__()
@@ -47,7 +57,7 @@ class SingleViewto3D(nn.Module):
             # Input: b x 512
             # Output: b x mesh_pred.verts_packed().shape[0] x 3  
             # try different mesh initializations
-            mesh_pred = ico_sphere(4, self.device)
+            mesh_pred = get_shape(args.start_shape, self.device)
             self.fc1 = nn.Linear(512, 1024)
             self.fc2 = nn.Linear(1024, 2048)
             self.n_vertices = mesh_pred.verts_packed().shape[0]
