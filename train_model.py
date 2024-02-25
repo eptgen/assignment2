@@ -121,8 +121,8 @@ def train_model(args):
         max_iter = len(eval_loader)
         for step in range(max_iter):
             feed_dict = next(eval_loader)
+            print("at step", step)
             if step % vis_step == 0:
-                print("at step", step)
                 images = feed_dict['images'].to(args.device).squeeze(1)
                 images_rgb = images
                 if args.load_feat:
