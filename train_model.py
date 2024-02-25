@@ -118,16 +118,14 @@ def train_model(args):
             pin_memory=True,
             drop_last=True)
         eval_loader = iter(test_loader)
-        max_iter = len(eval_loader)
+        max_iter = 7
         for step in range(max_iter):
             feed_dict = next(eval_loader)
-            print("at step", step)
-            if step % vis_step == 0:
-                images = feed_dict['images'].to(args.device).squeeze(1)
-                images_rgb = images
-                if args.load_feat:
-                    images = torch.stack(feed_dict['feats']).to(args.device)
-                test_vis.append((images, images_rgb))
+            images = feed_dict['images'].to(args.device).squeeze(1)
+            images_rgb = images
+            if args.load_feat:
+                images = torch.stack(feed_dict['feats']).to(args.device)
+            test_vis.append((images, images_rgb))
     
     delta_theta = 360 * args.max_iter / args.save_freq
     theta = 0
