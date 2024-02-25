@@ -145,6 +145,18 @@ def render_gif(renderer, model, args, num_povs):
         rends.append((rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
     return rends
     
+def render_from_angle(mesh, angle):
+    renderer = get_mesh_renderer(image_size=256)
+    mesh_textures = torch.ones_like(mesh.verts_packed(), device = args.device)
+    mesh_textures = mesh_textures * color
+    mesh.textures = TexturesVertex(mesh_textures.unsqueeze(0))
+    R, T = look_at_view_transform(dist = 2., azim = angle)
+    cameras = FoVPerspectiveCameras(
+        R=R, T=T, fov=60, device=args.device
+    )
+    lights = PointLights(location=[[0, 0, -3]], device=args.device)
+    rend = renderer(model, cameras=cameras, lights=lights)
+    return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
 
 def render_voxel(voxels, args):
     color = torch.tensor([0.7, 0.7, 1], device = args.device)

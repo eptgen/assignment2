@@ -8,6 +8,7 @@ from model import SingleViewto3D
 from pytorch3d.datasets.r2n2.utils import collate_batched_R2N2
 from pytorch3d.ops import sample_points_from_meshes
 from r2n2_custom import R2N2
+from utils import render_from_angle
 
 
 def get_args_parser():
@@ -27,6 +28,7 @@ def get_args_parser():
     parser.add_argument("--save_freq", default=2000, type=int)
     parser.add_argument("--load_checkpoint", action="store_true")
     parser.add_argument('--load_feat', action='store_true')
+    parser.add_argument('--visualize', action='store_true')
     parser.add_argument('--device', default='cuda', type=str)
     parser.add_argument("--start_shape", default="sphere", type=str)
     return parser
@@ -102,7 +104,32 @@ def train_model(args):
         optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
         start_iter = checkpoint["step"]
         print(f"Succesfully loaded iter {start_iter}")
-
+        
+    test_vis = []
+    test_vis_rend = []
+    for i in test_vis: test_vis_rend.append([])
+    vis_step = 100
+    if args.visualize:
+        test_loader = torch.utils.data.DataLoader(
+            r2n2_dataset,
+            batch_size=args.batch_size,
+            num_workers=args.num_workers,
+            collate_fn=collate_batched_R2N2,
+            pin_memory=True,
+            drop_last=True)
+        eval_loader = iter(loader)
+        max_iter = len(eval_loader)
+        for step in range(max_iter):
+            feed_dict = next(eval_loader)
+            if step % vis_step == 0:
+                images = feed_dict['images'].to(args.device).squeeze(1)
+                images_rgb = images
+                if args.load_feat:
+                    images = torch.stack(feed_dict['feats']).to(args.device)
+                test_vis.append((images, images_rgb))
+    
+    delta_theta = 360 * max_step / args.save_freq
+    theta = 0
     print("Starting training !")
     for step in range(start_iter, args.max_iter):
         iter_start_time = time.time()
@@ -130,7 +157,7 @@ def train_model(args):
 
         loss_vis = loss.cpu().item()
 
-        if (step % args.save_freq) == 0 and step > 0:
+        if (step % args.save_freq): # and step > 0:
             print(f"Saving checkpoint at step {step}")
             torch.save(
                 {
@@ -140,13 +167,24 @@ def train_model(args):
                 },
                 f"checkpoint_{args.type}_{args.start_shape}.pth",
             )
+            if args.visualize:
+                for i in range(len(test_vis)):
+                    test_img = test_vis[i]
+                    prediction = model(test_img[0], args)[0]
+                    rend = render_from_angle(prediction, theta)
+                    test_vis_rend[i].append(rend)
+                theta += delta_theta
+                    
 
         print(
             "[%4d/%4d]; ttime: %.0f (%.2f, %.2f); loss: %.3f"
             % (step, args.max_iter, total_time, read_time, iter_time, loss_vis)
         )
-        print("ground truth shape", ground_truth_3d.shape)
-
+    
+    curr = 0
+    for ani in test_vis_rend:
+        imageio.mimsave(f"training_vis_{curr}.gif", ani, fps = 3, loop = 0)
+        curr += vis_step
     print("Done!")
 
 

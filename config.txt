@@ -12,3 +12,4 @@ mesh:
 num_workers: 4
 B: 8
 max_iter: 1200
+current working: mesh_model1.pth
