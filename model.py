@@ -11,9 +11,9 @@ def get_shape(shape, device):
     if shape == "sphere":
         return ico_sphere(4, device)
     if shape == "torus1":
-        return torus(r, R, 42, 61, device = device)
+        return torus(0.5, 1, 42, 61, device = device)
     if shape == "torus2":
-        return torus(r, R, 61, 42, device = device)
+        return torus(0.5, 1, 61, 42, device = device)
     if shape == "checkerboard":
         return checkerboard(25, device = device)
     
