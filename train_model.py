@@ -157,7 +157,7 @@ def train_model(args):
 
         loss_vis = loss.cpu().item()
 
-        if (step % args.save_freq): # and step > 0:
+        if (step % args.save_freq) == 0: # and step > 0:
             print(f"Saving checkpoint at step {step}")
             torch.save(
                 {
