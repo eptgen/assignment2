@@ -170,7 +170,7 @@ def train_model(args):
                 for i in range(len(test_vis)):
                     test_img = test_vis[i]
                     prediction = model(test_img[0], args)[0]
-                    rend = render_from_angle(prediction, theta)
+                    rend = render_from_angle(prediction, theta, args)
                     test_vis_rend[i].append(rend)
                 theta += delta_theta
                     
