@@ -181,10 +181,11 @@ def train_model(args):
             % (step, args.max_iter, total_time, read_time, iter_time, loss_vis)
         )
     
-    curr = 0
-    for ani in test_vis_rend:
-        imageio.mimsave(f"training_vis_{curr}.gif", ani, fps = 3, loop = 0)
-        curr += vis_step
+    if args.visualize:
+        curr = 0
+        for ani in test_vis_rend:
+            imageio.mimsave(f"training_vis_{curr}.gif", ani, fps = 3, loop = 0)
+            curr += vis_step
     print("Done!")
 
 
