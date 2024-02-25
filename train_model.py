@@ -128,7 +128,7 @@ def train_model(args):
                     images = torch.stack(feed_dict['feats']).to(args.device)
                 test_vis.append((images, images_rgb))
     
-    delta_theta = 360 * max_step / args.save_freq
+    delta_theta = 360 * args.max_iter / args.save_freq
     theta = 0
     print("Starting training !")
     for step in range(start_iter, args.max_iter):
