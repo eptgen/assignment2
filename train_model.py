@@ -138,7 +138,7 @@ def train_model(args):
                     "model_state_dict": model.state_dict(),
                     "optimizer_state_dict": optimizer.state_dict(),
                 },
-                f"checkpoint_{args.type}.pth",
+                f"checkpoint_{args.type}_{args.start_shape}.pth",
             )
 
         print(

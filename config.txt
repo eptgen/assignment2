@@ -1,0 +1,14 @@
+vox:
+num_workers: 0
+B: 32
+max_iter: 3500
+
+point:
+num_workers: 0
+B: 32
+max_iter: 4000
+
+mesh:
+num_workers: 4
+B: 8
+max_iter: 1200
