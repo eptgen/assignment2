@@ -156,7 +156,7 @@ def render_from_angle(mesh, angle, args):
         R=R, T=T, fov=60, device=args.device
     )
     lights = PointLights(location=[[0, 0, -3]], device=args.device)
-    rend = renderer(model, cameras=cameras, lights=lights)
+    rend = renderer(mesh, cameras=cameras, lights=lights)
     return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)
 
 def render_voxel(voxels, args):
