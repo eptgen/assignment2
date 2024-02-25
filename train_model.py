@@ -117,7 +117,7 @@ def train_model(args):
             collate_fn=collate_batched_R2N2,
             pin_memory=True,
             drop_last=True)
-        eval_loader = iter(loader)
+        eval_loader = iter(test_loader)
         max_iter = len(eval_loader)
         for step in range(max_iter):
             feed_dict = next(eval_loader)
