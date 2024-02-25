@@ -156,7 +156,7 @@ def render_from_angle(mesh, angle):
     )
     lights = PointLights(location=[[0, 0, -3]], device=args.device)
     rend = renderer(model, cameras=cameras, lights=lights)
-    return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8))
+    return (rend.detach().cpu().numpy()[0, ..., :3] * 255).astype(np.uint8)
 
 def render_voxel(voxels, args):
     color = torch.tensor([0.7, 0.7, 1], device = args.device)
