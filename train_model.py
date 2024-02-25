@@ -2,6 +2,7 @@ import argparse
 import time
 
 import dataset_location
+import imageio
 import losses
 import torch
 from model import SingleViewto3D
