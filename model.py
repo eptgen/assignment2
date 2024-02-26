@@ -8,14 +8,13 @@ from pytorch3d.utils import checkerboard, ico_sphere, torus
 import pytorch3d
 
 def get_shape(shape, device):
-    if shape == "sphere":
-        return ico_sphere(4, device)
     if shape == "torus1":
         return torus(0.5, 1, 42, 61, device = device)
     if shape == "torus2":
         return torus(0.5, 1, 61, 42, device = device)
     if shape == "checkerboard":
         return checkerboard(25).to(device)
+    return ico_sphere(4, device)
     
 class SingleViewto3D(nn.Module):
     def __init__(self, args):
